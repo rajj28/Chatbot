@@ -1,0 +1,15 @@
+{
+    "name": "ABC Lighting Company",
+    "greeting": "We specialize in eco-friendly solar lighting solutions for residential and commercial spaces.",
+    "businessHours": "Monday to Friday: 9:00 AM - 6:00 PM, Saturday: 10:00 AM - 4:00 PM, Sunday: Closed",
+    "locations": [
+      "123 Solar Drive, Phoenix, AZ 85001",
+      "456 Green Energy Blvd, Denver, CO 80202"
+    ],
+    "contactInfo": {
+      "phone": "(800) 123-4567",
+      "email": "service@abclighting.example.com",
+      "website": "www.abclighting.example.com"
+    },
+    "about": "ABC Lighting Company has been a leader in sustainable outdoor lighting solutions since 2010. Our products combine cutting-edge solar technology with elegant design to provide reliable, energy-efficient lighting options that reduce carbon footprint while enhancing safety and aesthetics."
+}

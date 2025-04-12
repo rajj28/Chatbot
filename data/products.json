@@ -1,0 +1,62 @@
+[
+    {
+      "id": "street-light",
+      "name": "SolarBright Pro Street Light",
+      "shortDescription": "High-performance solar street light for urban areas",
+      "description": "The SolarBright Pro Street Light is our flagship product designed for municipal and commercial applications. It features high-efficiency monocrystalline solar panels, intelligent motion detection, and weather-resistant construction. Perfect for streets, parking lots, and public spaces.",
+      "specifications": {
+        "Solar Panel": "30W Monocrystalline Silicon",
+        "Battery Capacity": "24000mAh Lithium-ion",
+        "LED Power": "15W",
+        "Lumens": "2000lm",
+        "Operating Time": "12-14 hours per full charge",
+        "Motion Detection Range": "30 feet",
+        "Weather Resistance": "IP65 waterproof rating",
+        "Pole Height": "12-15 feet adjustable",
+        "Installation": "Bolt mounting system"
+      },
+      "price": "$599.99",
+      "warranty": "5-year",
+      "imageUrl": "/images/street-light"
+    },
+    {
+      "id": "driveway-light",
+      "name": "SolarPath Driveway Illuminator",
+      "shortDescription": "Energy-efficient lighting for residential driveways",
+      "description": "The SolarPath Driveway Illuminator provides elegant, reliable lighting for residential driveways and pathways. With its sleek design and durable construction, it enhances both safety and curb appeal while requiring zero electricity from the grid.",
+      "specifications": {
+        "Solar Panel": "10W Polycrystalline",
+        "Battery Capacity": "8000mAh Lithium-ion",
+        "LED Power": "5W",
+        "Lumens": "650lm",
+        "Operating Time": "8-10 hours per full charge",
+        "Auto On/Off": "Light sensor activated",
+        "Weather Resistance": "IP64 waterproof rating",
+        "Height": "2.5 feet",
+        "Installation": "Ground stake or surface mount options"
+      },
+      "price": "$129.99",
+      "warranty": "3-year",
+      "imageUrl": "/images/driveway-light"
+    },
+    {
+      "id": "wall-light",
+      "name": "SolarGlow Exterior Wall Light",
+      "shortDescription": "Modern solar-powered wall lights for home exteriors",
+      "description": "The SolarGlow Exterior Wall Light combines modern aesthetics with practical functionality. Easily mounted on any exterior wall, it provides ambient lighting with adjustable brightness settings and an optional motion detection mode for security purposes.",
+      "specifications": {
+        "Solar Panel": "5W Monocrystalline",
+        "Battery Capacity": "4000mAh Lithium-ion",
+        "LED Power": "3W",
+        "Lumens": "400lm",
+        "Operating Time": "6-8 hours per full charge",
+        "Lighting Modes": "Constant, Motion-activated, and Dim/Bright",
+        "Weather Resistance": "IP65 waterproof rating",
+        "Dimensions": "8\" x 5\" x 3\"",
+        "Installation": "Screw mounting (hardware included)"
+      },
+      "price": "$79.99",
+      "warranty": "2-year",
+      "imageUrl": "/images/wall-light"
+    }
+  ]

@@ -1,0 +1,97 @@
+{
+    "info": {
+      "name": "ABC Lighting ChatBot",
+      "_postman_id": "abc-lighting-bot-chat",
+      "description": "Conversational AI bot for ABC Lighting Company using OpenAI or mock logic. Simulates responses based on static prompt data.",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Customer Query (Parent)",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "url": {
+            "raw": "{{openai_api_url}}",
+            "host": ["{{openai_api_url}}"]
+          },
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"model\": \"gpt-3.5-turbo\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a customer service representative for ABC Lighting Company. Here is some information: Locations: 42 Solar Park Avenue, San Diego, CA and 128 Green Grid Road, Austin, TX. Business Hours: Mon-Fri 9 AM–6 PM, Sat 10 AM–4 PM, Sun closed. We offer solar-powered street light, driveway light, and outside wall light. Always end answers with 'Is there anything else I can help you with?' If user says 'no', request their name and email.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"What are your business hours?\"\n    }\n  ]\n}"
+          }
+        }
+      },
+      {
+        "name": "Street Light Info",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "url": {
+            "raw": "{{openai_api_url}}",
+            "host": ["{{openai_api_url}}"]
+          },
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"model\": \"gpt-3.5-turbo\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a product expert for the Solar Street Light (Model: SunGlide Pro 2000). Height: 15 ft, Battery: 12000 mAh, Lighting Time: 12-14 hrs/night, Charge Time: 6-8 hrs, Waterproof: IP65, Warranty: 3 years, Sensor: Motion + Light. Image available upon request.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Tell me about your street lights.\"\n    }\n  ]\n}"
+          }
+        }
+      },
+      {
+        "name": "Driveway Light Info",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "url": {
+            "raw": "{{openai_api_url}}",
+            "host": ["{{openai_api_url}}"]
+          },
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"model\": \"gpt-3.5-turbo\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a product expert for the Solar Driveway Light (Model: DriveBeam 300). Size: 6x4x1 in, Battery: 2000 mAh, Charge Time: 4-6 hrs, Load: 10 tons, Waterproof: IP68, Mount: flush/surface. Image available upon request.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Tell me about your driveway lights.\"\n    }\n  ]\n}"
+          }
+        }
+      },
+      {
+        "name": "Wall Light Info",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "url": {
+            "raw": "{{openai_api_url}}",
+            "host": ["{{openai_api_url}}"]
+          },
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"model\": \"gpt-3.5-turbo\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a product expert for the Solar Wall Light (Model: WallRay 900). Brightness: 800 lumens, Battery: 3000 mAh, Charge Time: 5-7 hrs, Auto On/Off + Motion Sensor, IP65 waterproof. Image available upon request.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Can I see the wall light specs?\"\n    }\n  ]\n}"
+          }
+        }
+      }
+    ],
+    "variable": [
+      {
+        "key": "openai_api_url",
+        "value": "https://api.openai.com/v1/chat/completions"
+      }
+    ]
+  }
+  
