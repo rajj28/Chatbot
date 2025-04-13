@@ -17,6 +17,7 @@ app.use(express.static('public'));
 const companyData = require('./data/company.json');
 const productsData = require('./data/products.json');
 
+
 // Track conversation state
 const conversations = {};
 const contactInfo = {};
@@ -97,61 +98,76 @@ app.get('/admin/contacts', (req, res) => {
 
 // Main chat completion endpoint
 app.post('/v1/chat/completions', (req, res) => {
-  console.log('Received request:', req.body);
-  const { messages, user } = req.body;
-  
-  // Initialize conversation state if it doesn't exist
-  if (!conversations[user]) {
-    conversations[user] = {
-      askedForContact: false,
-      sharedProducts: false,
-      currentProduct: null,
-      endingConversation: false
-    };
-  }
-  
-  const userState = conversations[user];
-  const userMessage = messages[messages.length - 1].content.toLowerCase();
-  
-  console.log('Processing message:', userMessage);
-  console.log('User state:', userState);
-  
-  // Process user message and generate response
-  let botResponse = generateResponse(userMessage, userState);
-  
-  console.log('Generated response:', botResponse);
-  
-  // Format response to match OpenAI API structure
-  res.json({
-    id: 'chatcmpl-' + Math.random().toString(36).substring(2, 12),
-    object: 'chat.completion',
-    created: Math.floor(Date.now() / 1000),
-    model: 'abc-lighting-bot',
-    choices: [
-      {
-        index: 0,
-        message: {
-          role: 'assistant',
-          content: botResponse
-        },
-        finish_reason: 'stop'
-      }
-    ],
-    usage: {
-      prompt_tokens: countTokens(messages),
-      completion_tokens: countTokens(botResponse),
-      total_tokens: countTokens(messages) + countTokens(botResponse)
+  try {
+    console.log('Received request:', req.body);
+    const { messages, user } = req.body;
+    
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      throw new Error('Invalid messages format');
     }
-  });
+    
+    // Initialize conversation state if it doesn't exist
+    if (!conversations[user]) {
+      conversations[user] = {
+        askedForContact: false,
+        sharedProducts: false,
+        currentProduct: null,
+        endingConversation: false
+      };
+    }
+    
+    const userState = conversations[user];
+    const userMessage = messages[messages.length - 1].content.toLowerCase();
+    
+    console.log('Processing message:', userMessage);
+    console.log('User state:', userState);
+    
+    // Process user message and generate response
+    let botResponse = generateResponse(userMessage, userState);
+    
+    console.log('Generated response:', botResponse);
+    
+    // Format response to match OpenAI API structure
+    res.json({
+      id: 'chatcmpl-' + Math.random().toString(36).substring(2, 12),
+      object: 'chat.completion',
+      created: Math.floor(Date.now() / 1000),
+      model: 'abc-lighting-bot',
+      choices: [
+        {
+          index: 0,
+          message: {
+            role: 'assistant',
+            content: botResponse
+          },
+          finish_reason: 'stop'
+        }
+      ],
+      usage: {
+        prompt_tokens: countTokens(messages),
+        completion_tokens: countTokens(botResponse),
+        total_tokens: countTokens(messages) + countTokens(botResponse)
+      }
+    });
+  } catch (error) {
+    console.error('Error processing request:', error);
+    res.status(500).json({
+      error: {
+        message: 'An error occurred while processing your request'
+      }
+    });
+  }
 });
 
-// Image serving endpoint
+// GitHub image endpoint - returns the GitHub URL for product images
+// Update the image endpoint
 app.get('/images/:productId', (req, res) => {
   const productId = req.params.productId;
-  const imagePath = path.join(__dirname, 'public/images', `${productId}.jpg`);
+  const product = productsData.find(p => p.id === productId);
   
-  if (fs.existsSync(imagePath)) {
-    res.sendFile(imagePath);
+  if (product && product.imageUrl) {
+    // Redirect to the GitHub URL from the product data
+    res.redirect(product.imageUrl);
   } else {
     res.status(404).send('Image not found');
   }
@@ -229,7 +245,7 @@ function generateResponse(message, state) {
   else if (message.includes('image') || message.includes('picture') || message.includes('photo')) {
     if (state.currentProduct) {
       const product = productsData.find(p => p.id === state.currentProduct);
-      response = `Here's an image of our ${product.name}:\n\n[Image URL: http://localhost:3000/images/${state.currentProduct}]`;
+      response = `Here's an image of our ${product.name}:\n\n[Image URL: ${product.imageUrl}]`;
     } else {
       response = "I'd be happy to show you product images. Which product are you interested in seeing? We have street lights, driveway lights, and wall lights.";
     }
@@ -269,22 +285,22 @@ function generateResponse(message, state) {
 
 // Helper function to generate product-specific responses
 function generateProductResponse(product, message) {
-  if (message.includes('price') || message.includes('cost') || message.includes('how much')) {
-    return `The ${product.name} is priced at ${product.price}. Would you like more information about this product?`;
-  } 
-  else if (message.includes('warranty') || message.includes('guarantee')) {
-    return `The ${product.name} comes with a ${product.warranty} warranty. Our warranty covers manufacturing defects and normal usage issues.`;
+  let response = '';
+  
+  if (message.includes('image') || message.includes('picture') || message.includes('photo')) {
+    response = `Here's an image of our ${product.name}:\n\n<img src="${product.imageUrl}" alt="${product.name}" />`;
+  } else if (message.includes('price') || message.includes('cost')) {
+    response = `The ${product.name} is priced at ${product.price} and comes with a ${product.warranty} warranty.`;
+  } else if (message.includes('spec') || message.includes('feature') || message.includes('detail')) {
+    response = `Here are the specifications for the ${product.name}:\n\n`;
+    Object.entries(product.specifications).forEach(([key, value]) => {
+      response += `- ${key}: ${value}\n`;
+    });
+  } else {
+    response = `${product.description}\n\nWould you like to know more about the price, specifications, or see an image?`;
   }
-  else if (message.includes('image') || message.includes('picture') || message.includes('photo')) {
-    return `Here's an image of our ${product.name}:\n\n[Image URL: http://localhost:3000/images/${product.id}]`;
-  }
-  else {
-    return `About our ${product.name}:\n${product.description}\n\nKey specifications:\n` +
-      Object.entries(product.specifications)
-        .map(([key, value]) => `- ${key}: ${value}`)
-        .join('\n') +
-      `\n\nWould you like to see an image of the ${product.name}?`;
-  }
+  
+  return response;
 }
 
 // Simple token counter for usage metrics
@@ -356,14 +372,14 @@ app.post('/chat', async (req, res) => {
 
 // Admin endpoints
 app.get('/admin/conversations', (req, res) => {
-    const conversations = {};
+    const conversationsData = {};
     for (const [userId, state] of Object.entries(conversations)) {
-        conversations[userId] = {
+        conversationsData[userId] = {
             ...state,
             messages: conversationHistory[userId]?.messages || []
         };
     }
-    res.json(conversations);
+    res.json(conversationsData);
 });
 
 app.get('/admin/contacts', (req, res) => {

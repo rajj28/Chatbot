@@ -17,7 +17,7 @@
       },
       "price": "$599.99",
       "warranty": "5-year",
-      "imageUrl": "/images/street-light"
+      "imageUrl": "https://raw.githubusercontent.com/rajj28/Chatbot-images-/main/street-light.jpg"
     },
     {
       "id": "driveway-light",
@@ -37,7 +37,7 @@
       },
       "price": "$129.99",
       "warranty": "3-year",
-      "imageUrl": "/images/driveway-light"
+      "imageUrl": "https://raw.githubusercontent.com/rajj28/Chatbot-images-/main/driveway-light.jpg"
     },
     {
       "id": "wall-light",
@@ -57,6 +57,6 @@
       },
       "price": "$79.99",
       "warranty": "2-year",
-      "imageUrl": "/images/wall-light"
+      "imageUrl": "https://raw.githubusercontent.com/rajj28/Chatbot-images-/main/wall-light.jpg"
     }
   ]

@@ -184,6 +184,34 @@
             color: white;
         }
 
+        .product-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-container {
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .user {
+            background-color: #e3f2fd;
+            margin-left: auto;
+        }
+
+        .bot {
+            background-color: #f5f5f5;
+        }
+
         @media (max-width: 768px) {
             .container {
                 margin: 10px;
@@ -234,22 +262,38 @@
         const typingIndicator = document.getElementById('typing-indicator');
         const userId = 'user-' + Date.now();
 
-        function addMessage(content, isUser = false) {
+        function addMessage(message, isUser = false) {
+            const chatMessages = document.getElementById('chat-container');
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-            messageDiv.textContent = content;
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            // Check if message contains an image tag
+            const imgMatch = message.match(/<img src="([^"]+)" alt="([^"]+)" \/>/);
+            if (imgMatch) {
+                const [_, src, alt] = imgMatch;
+                messageDiv.innerHTML = message.replace(imgMatch[0], '');
+                addImage(src, alt);
+            } else {
+                messageDiv.textContent = message;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        function addImage(imageUrl) {
+        function addImage(src, alt) {
+            const chatMessages = document.getElementById('chat-container');
             const imageContainer = document.createElement('div');
             imageContainer.className = 'image-container';
+            
             const img = document.createElement('img');
-            img.src = imageUrl;
+            img.src = src;
+            img.alt = alt;
+            img.className = 'product-image';
+            
             imageContainer.appendChild(img);
-            chatContainer.appendChild(imageContainer);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            chatMessages.appendChild(imageContainer);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function showTypingIndicator() {
@@ -287,7 +331,16 @@
                     })
                 });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
+                
+                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                    throw new Error('Invalid response format from server');
+                }
+
                 const botResponse = data.choices[0].message.content;
 
                 // Add bot response to chat
@@ -302,7 +355,7 @@
             } catch (error) {
                 console.error('Error:', error);
                 hideTypingIndicator();
-                addMessage('Sorry, there was an error processing your request.');
+                addMessage('Sorry, there was an error processing your request. Please try again.');
             }
         }
 
